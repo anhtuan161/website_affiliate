@@ -1,5 +1,9 @@
 import { Request } from 'express';
-import { User, Role } from '@prisma/client';
+import { User } from '@prisma/client';
+
+// Define role types as string literals
+export type Role = 'ADMIN' | 'STAFF' | 'MEMBER' | 'OWNER';
+export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
 // Extended Request interface with user data
 export interface AuthenticatedRequest extends Request {

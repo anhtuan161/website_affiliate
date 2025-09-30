@@ -23,6 +23,13 @@ export default defineConfig({
       '@': resolve(__dirname, 'src/client')
     }
   },
+  esbuild: {
+    target: 'es2020',
+    jsx: 'preserve'
+  },
+  optimizeDeps: {
+    exclude: ['@prisma/client']
+  },
   server: {
     port: 3000,
     proxy: {

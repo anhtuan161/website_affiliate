@@ -1,8 +1,8 @@
 import express from 'express';
 import { body, validationResult, query } from 'express-validator';
-import { PrismaClient, PostStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { authenticateToken, requireStaff, requireAdmin } from '../middleware/auth';
-import { AuthenticatedRequest, ApiResponse, CreatePostRequest, UpdatePostRequest } from '../types';
+import { AuthenticatedRequest, ApiResponse, CreatePostRequest, UpdatePostRequest, PostStatus } from '../types';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -18,7 +18,7 @@ router.use(authenticateToken);
 router.get('/', [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100'),
-  query('status').optional().isIn(Object.values(PostStatus)).withMessage('Invalid status filter'),
+  query('status').optional().isIn(['DRAFT', 'PUBLISHED', 'ARCHIVED']).withMessage('Invalid status filter'),
   query('search').optional().isLength({ min: 1 }).withMessage('Search term must not be empty'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {
@@ -195,7 +195,7 @@ router.get('/:id', async (req: AuthenticatedRequest, res: express.Response<ApiRe
 router.post('/', requireStaff, [
   body('title').isLength({ min: 1, max: 200 }).withMessage('Title must be between 1 and 200 characters'),
   body('content').isLength({ min: 1 }).withMessage('Content is required'),
-  body('status').optional().isIn(Object.values(PostStatus)).withMessage('Invalid status'),
+  body('status').optional().isIn(['DRAFT', 'PUBLISHED', 'ARCHIVED']).withMessage('Invalid status'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {
     const errors = validationResult(req);
@@ -261,7 +261,7 @@ router.post('/', requireStaff, [
 router.put('/:id', requireStaff, [
   body('title').optional().isLength({ min: 1, max: 200 }).withMessage('Title must be between 1 and 200 characters'),
   body('content').optional().isLength({ min: 1 }).withMessage('Content cannot be empty'),
-  body('status').optional().isIn(Object.values(PostStatus)).withMessage('Invalid status'),
+  body('status').optional().isIn(['DRAFT', 'PUBLISHED', 'ARCHIVED']).withMessage('Invalid status'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {
     const errors = validationResult(req);

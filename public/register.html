@@ -187,8 +187,8 @@
     </div>
 
     <script type="module">
-        import authManager from '/src/client/auth.js';
-        import { DOMUtils, FormUtils, NotificationUtils } from '/src/client/ui.js';
+        import authManager from '/src/client/auth.ts';
+        import { DOMUtils, FormUtils, NotificationUtils } from '/src/client/ui.ts';
         
         // Initialize Feather icons
         feather.replace();
@@ -261,7 +261,7 @@
         document.getElementById('registerForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const form = e.target as HTMLFormElement;
+            const form = e.target;
             const formData = FormUtils.getFormData(form);
             
             // Clear previous errors
@@ -307,9 +307,9 @@
             if (!isValid) return;
             
             // Show loading state
-            const submitButton = form.querySelector('[data-slot="submit-button"]') as HTMLButtonElement;
-            const submitText = form.querySelector('[data-slot="submit-text"]') as HTMLElement;
-            const loadingText = form.querySelector('[data-slot="loading-text"]') as HTMLElement;
+            const submitButton = form.querySelector('[data-slot="submit-button"]');
+            const submitText = form.querySelector('[data-slot="submit-text"]');
+            const loadingText = form.querySelector('[data-slot="loading-text"]');
             
             if (submitButton && submitText && loadingText) {
                 submitButton.disabled = true;
@@ -324,7 +324,7 @@
                     password: formData.password,
                     confirmPassword: formData['confirm-password'],
                     name: formData.email.split('@')[0],
-                    role: formData.role as 'ADMIN' | 'STAFF' | 'MEMBER' | 'OWNER',
+                    role: formData.role,
                     terms: formData.terms === 'on'
                 });
                 

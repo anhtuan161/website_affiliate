@@ -1,9 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { body, validationResult } from 'express-validator';
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { generateTokens, refreshAccessToken } from '../middleware/auth';
-import { AuthenticatedRequest, ApiResponse, LoginRequest, RegisterRequest, AuthResponse } from '../types';
+import { AuthenticatedRequest, ApiResponse, LoginRequest, RegisterRequest, AuthResponse, Role } from '../types';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -118,7 +118,7 @@ router.post('/register', [
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
   body('name').optional().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-  body('role').isIn(Object.values(Role)).withMessage('Valid role is required'),
+  body('role').isIn(['ADMIN', 'STAFF', 'MEMBER', 'OWNER']).withMessage('Valid role is required'),
 ], async (req: express.Request, res: express.Response<ApiResponse<AuthResponse>>) => {
   try {
     // Validate input

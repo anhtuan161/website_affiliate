@@ -1,8 +1,8 @@
 import express from 'express';
 import { body, validationResult, query } from 'express-validator';
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { authenticateToken, requireAdmin, requireStaff } from '../middleware/auth';
-import { AuthenticatedRequest, ApiResponse, CreateUserRequest, UpdateUserRequest } from '../types';
+import { AuthenticatedRequest, ApiResponse, CreateUserRequest, UpdateUserRequest, Role } from '../types';
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -18,7 +18,7 @@ router.use(authenticateToken);
 router.get('/', requireAdmin, [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100'),
-  query('role').optional().isIn(Object.values(Role)).withMessage('Invalid role filter'),
+  query('role').optional().isIn(['ADMIN', 'STAFF', 'MEMBER', 'OWNER']).withMessage('Invalid role filter'),
   query('search').optional().isLength({ min: 1 }).withMessage('Search term must not be empty'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {
@@ -159,7 +159,7 @@ router.post('/', requireAdmin, [
   body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
   body('name').optional().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-  body('role').isIn(Object.values(Role)).withMessage('Valid role is required'),
+  body('role').isIn(['ADMIN', 'STAFF', 'MEMBER', 'OWNER']).withMessage('Valid role is required'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {
     const errors = validationResult(req);
@@ -235,7 +235,7 @@ router.post('/', requireAdmin, [
  */
 router.put('/:id', requireAdmin, [
   body('name').optional().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-  body('role').optional().isIn(Object.values(Role)).withMessage('Valid role is required'),
+  body('role').optional().isIn(['ADMIN', 'STAFF', 'MEMBER', 'OWNER']).withMessage('Valid role is required'),
   body('isActive').optional().isBoolean().withMessage('isActive must be a boolean'),
 ], async (req: AuthenticatedRequest, res: express.Response<ApiResponse>) => {
   try {

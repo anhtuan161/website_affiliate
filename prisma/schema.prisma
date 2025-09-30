@@ -10,21 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User roles enum - mapping to your existing roles
-enum Role {
-  ADMIN      // Full system access
-  STAFF      // SME Employee - can create & edit posts
-  MEMBER     // Collaborator - can view posts
-  OWNER      // SME Owner - can manage affiliates
-}
-
 // User model - represents all users in the system
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String   // Hashed with bcrypt
   name      String?
-  role      Role     @default(MEMBER)
+  role      String   @default("MEMBER") // ADMIN, STAFF, MEMBER, OWNER
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -41,7 +33,7 @@ model Post {
   id          String   @id @default(cuid())
   title       String
   content     String
-  status      PostStatus @default(DRAFT)
+  status      String   @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
   authorId    String?  // Optional - can be null for system posts
   createdById String?  // Who created this post (for audit)
   createdAt   DateTime @default(now())
@@ -52,11 +44,4 @@ model Post {
   createdBy   User?    @relation("PostCreatedBy", fields: [createdById], references: [id])
 
   @@map("posts")
-}
-
-// Post status enum
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
 }

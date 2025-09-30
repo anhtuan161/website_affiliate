@@ -147,8 +147,8 @@
     </div>
 
     <script type="module">
-        import authManager from '/src/client/auth.js';
-        import { PostManager, NotificationUtils } from '/src/client/ui.js';
+        import authManager from '/src/client/auth.ts';
+        import { PostManager, NotificationUtils } from '/src/client/ui.ts';
         
         // Initialize Feather icons
         feather.replace();
@@ -180,7 +180,7 @@
         
         // Event listeners
         document.addEventListener('click', async (e) => {
-            const target = e.target as HTMLElement;
+            const target = e.target;
             const action = target.getAttribute('data-action');
             
             switch (action) {
@@ -224,7 +224,8 @@
                 // Close dropdown when clicking outside
                 setTimeout(() => {
                     document.addEventListener('click', (e) => {
-                        if (!userMenu.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+                        const target = e.target;
+                        if (!userMenu.contains(target) && !dropdown.contains(target)) {
                             dropdown.remove();
                         }
                     }, { once: true });
