@@ -4,6 +4,7 @@
   "description": "AffiliateFlow - SME Partner Hub with role-based access",
   "main": "dist/server/index.js",
   "scripts": {
+    "setup": "node setup.js",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon --exec ts-node src/server/index.ts",
     "dev:client": "vite",

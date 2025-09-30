@@ -186,27 +186,32 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import authManager from '/src/client/auth.js';
+        import { DOMUtils, FormUtils, NotificationUtils } from '/src/client/ui.js';
+        
+        // Initialize Feather icons
         feather.replace();
         
         // Password visibility toggle
-        document.getElementById('togglePassword').addEventListener('click', function() {
+        document.getElementById('togglePassword')?.addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
-            const icon = this;
-            if (passwordInput.type === 'password') {
+            if (passwordInput && passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 feather.replace();
-            } else {
+            } else if (passwordInput) {
                 passwordInput.type = 'password';
                 feather.replace();
             }
         });
 
         // Password strength indicator
-        document.getElementById('password').addEventListener('input', function() {
+        document.getElementById('password')?.addEventListener('input', function() {
             const password = this.value;
             const strengthBar = document.querySelector('.password-strength');
             const strengthText = document.getElementById('strength-text');
+            
+            if (!strengthBar || !strengthText) return;
             
             // Calculate strength
             let strength = 0;
@@ -245,72 +250,112 @@
                 this.classList.add('selected', 'border-primary');
                 
                 // Update hidden input
-                document.getElementById('selected-role').value = this.dataset.role;
+                const selectedRoleInput = document.getElementById('selected-role');
+                if (selectedRoleInput) {
+                    selectedRoleInput.value = this.dataset.role || '';
+                }
             });
         });
 
-        // Form validation
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        // Form submission handler
+        document.getElementById('registerForm')?.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            const form = e.target as HTMLFormElement;
+            const formData = FormUtils.getFormData(form);
+            
+            // Clear previous errors
+            FormUtils.hideError('email-error');
+            FormUtils.hideError('password-error');
+            FormUtils.hideError('password-match-error');
+            FormUtils.hideError('role-error');
+            FormUtils.hideError('terms-error');
             
             let isValid = true;
             
             // Validate email
-            const email = document.getElementById('email').value;
-            const emailError = document.getElementById('email-error');
-            if (!/^\S+@\S+\.\S+$/.test(email)) {
-                emailError.classList.remove('hidden');
+            if (!FormUtils.isValidEmail(formData.email)) {
+                FormUtils.showError('email-error', 'Please enter a valid email address');
                 isValid = false;
-            } else {
-                emailError.classList.add('hidden');
+            }
+            
+            // Validate password
+            const passwordValidation = FormUtils.validatePassword(formData.password);
+            if (!passwordValidation.isValid) {
+                FormUtils.showError('password-error', passwordValidation.message);
+                isValid = false;
             }
             
             // Validate password match
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-            const passwordMatchError = document.getElementById('password-match-error');
-            if (password !== confirmPassword) {
-                passwordMatchError.classList.remove('hidden');
+            if (formData.password !== formData['confirm-password']) {
+                FormUtils.showError('password-match-error', 'Passwords do not match');
                 isValid = false;
-            } else {
-                passwordMatchError.classList.add('hidden');
             }
             
             // Validate role selection
-            const role = document.getElementById('selected-role').value;
-            const roleError = document.getElementById('role-error');
-            if (!role) {
-                roleError.classList.remove('hidden');
+            if (!formData.role) {
+                FormUtils.showError('role-error', 'Please select a role');
                 isValid = false;
-            } else {
-                roleError.classList.add('hidden');
             }
             
             // Validate terms
-            const terms = document.getElementById('terms').checked;
-            const termsError = document.getElementById('terms-error');
-            if (!terms) {
-                termsError.classList.remove('hidden');
+            if (!formData.terms) {
+                FormUtils.showError('terms-error', 'You must agree to the terms');
                 isValid = false;
-            } else {
-                termsError.classList.add('hidden');
             }
-                // If valid, proceed with registration
-                if (isValid) {
-                    // Store user data in localStorage (for demo purposes)
-                    const user = {
-                        email: email,
-                        password: password,
-                        role: role,
-                        id: 'user_' + Math.random().toString(36).substr(2, 9),
-                        name: email.split('@')[0]
-                    };
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    
+            
+            if (!isValid) return;
+            
+            // Show loading state
+            const submitButton = form.querySelector('[data-slot="submit-button"]') as HTMLButtonElement;
+            const submitText = form.querySelector('[data-slot="submit-text"]') as HTMLElement;
+            const loadingText = form.querySelector('[data-slot="loading-text"]') as HTMLElement;
+            
+            if (submitButton && submitText && loadingText) {
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                loadingText.classList.remove('hidden');
+            }
+            
+            try {
+                // Attempt registration
+                const result = await authManager.register({
+                    email: formData.email,
+                    password: formData.password,
+                    confirmPassword: formData['confirm-password'],
+                    name: formData.email.split('@')[0],
+                    role: formData.role as 'ADMIN' | 'STAFF' | 'MEMBER' | 'OWNER',
+                    terms: formData.terms === 'on'
+                });
+                
+                if (result.success) {
+                    NotificationUtils.showSuccess('Registration successful!');
                     // Redirect to appropriate dashboard
-                    window.location.href = role + '-dashboard.html';
+                    setTimeout(() => {
+                        window.location.href = authManager.getRedirectUrl();
+                    }, 1000);
+                } else {
+                    NotificationUtils.showError(result.error || 'Registration failed');
                 }
-});
+            } catch (error) {
+                console.error('Registration error:', error);
+                NotificationUtils.showError('An unexpected error occurred');
+            } finally {
+                // Reset loading state
+                if (submitButton && submitText && loadingText) {
+                    submitButton.disabled = false;
+                    submitText.classList.remove('hidden');
+                    loadingText.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Check if user is already logged in
+        const state = authManager.getState();
+        if (state.isAuthenticated && state.user) {
+            // Redirect to appropriate dashboard
+            window.location.href = authManager.getRedirectUrl();
+        }
     </script>
 </body>
 </html>

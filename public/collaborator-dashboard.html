@@ -146,8 +146,95 @@
         <div id="referrals-container" class="space-y-4"></div>
     </div>
 
-    <!-- Include JavaScript -->
-    <script src="collaborator-dashboard.js"></script>
+    <script type="module">
+        import authManager from '/src/client/auth.js';
+        import { PostManager, NotificationUtils } from '/src/client/ui.js';
+        
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Check authentication
+        const state = authManager.getState();
+        if (!state.isAuthenticated || !state.user) {
+            window.location.href = '/login.html';
+        } else if (state.user.role !== 'MEMBER') {
+            window.location.href = authManager.getRedirectUrl();
+        }
+        
+        // Update user info in header
+        const userNameElement = document.querySelector('span:contains("Collaborator")');
+        if (userNameElement && state.user) {
+            userNameElement.textContent = state.user.name || state.user.email;
+        }
+        
+        // Load initial data
+        async function loadDashboardData() {
+            try {
+                // Load posts (only published ones for members)
+                await PostManager.loadPosts('referrals-container', { status: 'PUBLISHED' });
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                NotificationUtils.showError('Failed to load dashboard data');
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('click', async (e) => {
+            const target = e.target as HTMLElement;
+            const action = target.getAttribute('data-action');
+            
+            switch (action) {
+                case 'generate-link':
+                    // Generate affiliate link
+                    NotificationUtils.showInfo('Generate link functionality coming soon');
+                    break;
+                    
+                case 'logout':
+                    await authManager.logout();
+                    window.location.href = '/login.html';
+                    break;
+            }
+        });
+        
+        // Add logout functionality to user menu
+        const userMenu = document.querySelector('.relative button');
+        if (userMenu) {
+            userMenu.addEventListener('click', () => {
+                // Create dropdown menu
+                const dropdown = document.createElement('div');
+                dropdown.className = 'absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50';
+                dropdown.innerHTML = `
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="profile">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="settings">Settings</a>
+                        <hr class="my-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="logout">Logout</a>
+                    </div>
+                `;
+                
+                // Remove existing dropdown
+                const existingDropdown = document.querySelector('.absolute.right-0.mt-2');
+                if (existingDropdown) {
+                    existingDropdown.remove();
+                }
+                
+                // Add dropdown
+                userMenu.parentElement?.appendChild(dropdown);
+                
+                // Close dropdown when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', (e) => {
+                        if (!userMenu.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+                            dropdown.remove();
+                        }
+                    }, { once: true });
+                }, 0);
+            });
+        }
+        
+        // Load dashboard data
+        loadDashboardData();
+    </script>
 </main>
     </div>
 </body>

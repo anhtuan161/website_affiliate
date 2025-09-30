@@ -128,10 +128,18 @@
                 </div>
             </div>
 
-            <!-- Order management placeholder -->
+            <!-- Posts Management -->
             <div class="bg-white p-6 rounded-lg shadow mb-6">
-                <h2 class="text-lg font-semibold text-dark mb-4">Order Management</h2>
-                <p class="text-gray-500">Order management coming soon. This section will allow employees to process orders, track referrals, and manage customer interactions.</p>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-dark">Posts Management</h2>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" data-action="create-post">
+                        <i data-feather="plus" class="h-4 w-4 mr-2"></i>
+                        Create Post
+                    </button>
+                </div>
+                <div id="posts-container" data-posts-container>
+                    <!-- Posts will be loaded here -->
+                </div>
             </div>
 
             <!-- Recent orders -->
@@ -176,8 +184,94 @@
         </main>
     </div>
 
-    <script>
+    <script type="module">
+        import authManager from '/src/client/auth.js';
+        import { PostManager, NotificationUtils } from '/src/client/ui.js';
+        
+        // Initialize Feather icons
         feather.replace();
+        
+        // Check authentication
+        const state = authManager.getState();
+        if (!state.isAuthenticated || !state.user) {
+            window.location.href = '/login.html';
+        } else if (state.user.role !== 'STAFF') {
+            window.location.href = authManager.getRedirectUrl();
+        }
+        
+        // Update user info in header
+        const userNameElement = document.querySelector('span:contains("Employee")');
+        if (userNameElement && state.user) {
+            userNameElement.textContent = state.user.name || state.user.email;
+        }
+        
+        // Load initial data
+        async function loadDashboardData() {
+            try {
+                // Load posts
+                await PostManager.loadPosts('posts-container');
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                NotificationUtils.showError('Failed to load dashboard data');
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('click', async (e) => {
+            const target = e.target as HTMLElement;
+            const action = target.getAttribute('data-action');
+            
+            switch (action) {
+                case 'create-post':
+                    // Open create post modal or navigate to create post page
+                    NotificationUtils.showInfo('Create post functionality coming soon');
+                    break;
+                    
+                case 'logout':
+                    await authManager.logout();
+                    window.location.href = '/login.html';
+                    break;
+            }
+        });
+        
+        // Add logout functionality to user menu
+        const userMenu = document.querySelector('.relative button');
+        if (userMenu) {
+            userMenu.addEventListener('click', () => {
+                // Create dropdown menu
+                const dropdown = document.createElement('div');
+                dropdown.className = 'absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50';
+                dropdown.innerHTML = `
+                    <div class="py-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="profile">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="settings">Settings</a>
+                        <hr class="my-1">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-action="logout">Logout</a>
+                    </div>
+                `;
+                
+                // Remove existing dropdown
+                const existingDropdown = document.querySelector('.absolute.right-0.mt-2');
+                if (existingDropdown) {
+                    existingDropdown.remove();
+                }
+                
+                // Add dropdown
+                userMenu.parentElement?.appendChild(dropdown);
+                
+                // Close dropdown when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', (e) => {
+                        if (!userMenu.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+                            dropdown.remove();
+                        }
+                    }, { once: true });
+                }, 0);
+            });
+        }
+        
+        // Load dashboard data
+        loadDashboardData();
     </script>
 </body>
 </html>
