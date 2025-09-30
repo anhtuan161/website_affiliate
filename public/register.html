@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AffiliateFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        .password-strength {
+            transition: all 0.3s ease;
+        }
+        .role-card {
+            transition: all 0.3s ease;
+        }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .role-card.selected {
+            border-color: #4F46E5;
+            background-color: #F5F3FF;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i data-feather="link" class="text-primary h-8 w-8"></i>
+                    <span class="ml-2 text-xl font-bold text-dark">AffiliateFlow</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="px-4 py-2 rounded-md text-sm font-medium text-dark hover:bg-gray-100">Log in</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-dark">Create your account</h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Join AffiliateFlow to start managing your affiliate program
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6" id="registerForm" data-action="register">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700"> Email address </label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm form-input" data-slot="email-input">
+                        </div>
+                        <p class="mt-1 text-sm text-red-600 hidden" id="email-error" data-slot="email-error">Please enter a valid email address</p>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700"> Password </label>
+                        <div class="mt-1 relative">
+                            <input id="password" name="password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm form-input" data-slot="password-input">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i data-feather="eye" class="h-5 w-5 text-gray-400 cursor-pointer" id="togglePassword" data-action="toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex items-center" id="password-strength" data-slot="password-strength">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-red-500 h-2.5 rounded-full password-strength" style="width: 0%"></div>
+                            </div>
+                            <span class="ml-2 text-xs text-gray-500" id="strength-text" data-slot="strength-text">Weak</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700"> Confirm Password </label>
+                        <div class="mt-1">
+                            <input id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm form-input" data-slot="confirm-password-input">
+                        </div>
+                        <p class="mt-1 text-sm text-red-600 hidden" id="password-match-error" data-slot="password-match-error">Passwords do not match</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Select Your Role</label>
+                        <div class="grid grid-cols-2 gap-4" data-slot="role-selection">
+                            <div class="role-card border rounded-lg p-4 cursor-pointer" data-role="ADMIN" data-action="select-role">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                                        <i data-feather="shield" class="text-primary h-5 w-5"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Admin</p>
+                                        <p class="text-xs text-gray-500">Full system access</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="role-card border rounded-lg p-4 cursor-pointer" data-role="OWNER" data-action="select-role">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
+                                        <i data-feather="briefcase" class="text-secondary h-5 w-5"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">SME Owner</p>
+                                        <p class="text-xs text-gray-500">Business owner</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="role-card border rounded-lg p-4 cursor-pointer" data-role="STAFF" data-action="select-role">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                        <i data-feather="user" class="text-blue-500 h-5 w-5"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">SME Employee</p>
+                                        <p class="text-xs text-gray-500">Store staff</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="role-card border rounded-lg p-4 cursor-pointer" data-role="MEMBER" data-action="select-role">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                        <i data-feather="users" class="text-purple-500 h-5 w-5"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Collaborator</p>
+                                        <p class="text-xs text-gray-500">Affiliate partner</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="role" id="selected-role" value="" data-slot="selected-role">
+                        <p class="mt-1 text-sm text-red-600 hidden" id="role-error" data-slot="role-error">Please select a role</p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" data-slot="terms-checkbox">
+                        <label for="terms" class="ml-2 block text-sm text-gray-700"> I agree to the <a href="#" class="font-medium text-primary hover:text-primary-dark">Terms of Service</a> and <a href="#" class="font-medium text-primary hover:text-primary-dark">Privacy Policy</a> </label>
+                    </div>
+                    <p class="mt-1 text-sm text-red-600 hidden" id="terms-error" data-slot="terms-error">You must agree to the terms</p>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" data-slot="submit-button">
+                            <span data-slot="submit-text">Create Account</span>
+                            <span class="hidden" data-slot="loading-text">Creating Account...</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500"> Or already have an account? </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <a href="login.html" class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            Sign in
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                feather.replace();
+            } else {
+                passwordInput.type = 'password';
+                feather.replace();
+            }
+        });
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.querySelector('.password-strength');
+            const strengthText = document.getElementById('strength-text');
+            
+            // Calculate strength
+            let strength = 0;
+            if (password.length > 0) strength += 20;
+            if (password.length >= 8) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+            
+            // Update UI
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 40) {
+                strengthBar.classList.remove('bg-yellow-500', 'bg-green-500');
+                strengthBar.classList.add('bg-red-500');
+                strengthText.textContent = 'Weak';
+            } else if (strength < 80) {
+                strengthBar.classList.remove('bg-red-500', 'bg-green-500');
+                strengthBar.classList.add('bg-yellow-500');
+                strengthText.textContent = 'Medium';
+            } else {
+                strengthBar.classList.remove('bg-red-500', 'bg-yellow-500');
+                strengthBar.classList.add('bg-green-500');
+                strengthText.textContent = 'Strong';
+            }
+        });
+
+        // Role selection
+        const roleCards = document.querySelectorAll('.role-card');
+        roleCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selected class from all cards
+                roleCards.forEach(c => c.classList.remove('selected', 'border-primary'));
+                
+                // Add selected class to clicked card
+                this.classList.add('selected', 'border-primary');
+                
+                // Update hidden input
+                document.getElementById('selected-role').value = this.dataset.role;
+            });
+        });
+
+        // Form validation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Validate email
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('email-error');
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                emailError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                emailError.classList.add('hidden');
+            }
+            
+            // Validate password match
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const passwordMatchError = document.getElementById('password-match-error');
+            if (password !== confirmPassword) {
+                passwordMatchError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                passwordMatchError.classList.add('hidden');
+            }
+            
+            // Validate role selection
+            const role = document.getElementById('selected-role').value;
+            const roleError = document.getElementById('role-error');
+            if (!role) {
+                roleError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                roleError.classList.add('hidden');
+            }
+            
+            // Validate terms
+            const terms = document.getElementById('terms').checked;
+            const termsError = document.getElementById('terms-error');
+            if (!terms) {
+                termsError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                termsError.classList.add('hidden');
+            }
+                // If valid, proceed with registration
+                if (isValid) {
+                    // Store user data in localStorage (for demo purposes)
+                    const user = {
+                        email: email,
+                        password: password,
+                        role: role,
+                        id: 'user_' + Math.random().toString(36).substr(2, 9),
+                        name: email.split('@')[0]
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Redirect to appropriate dashboard
+                    window.location.href = role + '-dashboard.html';
+                }
+});
+    </script>
+</body>
+</html>

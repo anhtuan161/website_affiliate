@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard - AffiliateFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+        <div class="flex items-center justify-center h-16 px-4 bg-blue-500">
+            <i data-feather="user" class="text-white h-8 w-8"></i>
+            <span class="ml-2 text-xl font-bold text-white">My Work</span>
+        </div>
+        <nav class="mt-6">
+            <div class="px-6 py-3 bg-blue-50 border-l-4 border-blue-500">
+                <a href="#" class="flex items-center text-blue-500">
+                    <i data-feather="home" class="h-5 w-5"></i>
+                    <span class="mx-3 font-medium">Dashboard</span>
+                </a>
+            </div>
+            <div class="px-6 py-3 mt-2">
+                <a href="#" class="flex items-center text-gray-600 hover:text-blue-500">
+                    <i data-feather="shopping-cart" class="h-5 w-5"></i>
+                    <span class="mx-3 font-medium">Orders</span>
+                </a>
+            </div>
+            <div class="px-6 py-3 mt-2">
+                <a href="#" class="flex items-center text-gray-600 hover:text-blue-500">
+                    <i data-feather="users" class="h-5 w-5"></i>
+                    <span class="mx-3 font-medium">Customers</span>
+                </a>
+            </div>
+            <div class="px-6 py-3 mt-2">
+                <a href="#" class="flex items-center text-gray-600 hover:text-blue-500">
+                    <i data-feather="settings" class="h-5 w-5"></i>
+                    <span class="mx-3 font-medium">Settings</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main content -->
+    <div class="ml-64">
+        <!-- Top navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="flex justify-between items-center h-16 px-6">
+                <div class="flex items-center">
+                    <button class="text-gray-500 focus:outline-none lg:hidden">
+                        <i data-feather="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-500 focus:outline-none">
+                        <i data-feather="bell" class="h-6 w-6"></i>
+                    </button>
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 focus:outline-none">
+                            <img class="h-8 w-8 rounded-full" src="http://static.photos/people/200x200/9" alt="User avatar">
+                            <span class="text-sm font-medium text-gray-700">Employee</span>
+                            <i data-feather="chevron-down" class="h-4 w-4 text-gray-500"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard content -->
+        <main class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-dark">Welcome, SME Employee</h1>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                    <i data-feather="plus" class="h-4 w-4 mr-2"></i>
+                    New Order
+                </button>
+            </div>
+
+            <!-- Stats cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-500">
+                            <i data-feather="shopping-cart" class="h-6 w-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Today's Orders</p>
+                            <p class="text-2xl font-semibold text-dark">12</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-500">
+                            <i data-feather="dollar-sign" class="h-6 w-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Today's Revenue</p>
+                            <p class="text-2xl font-semibold text-dark">$1,245</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-500">
+                            <i data-feather="users" class="h-6 w-6"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Referral Orders</p>
+                            <p class="text-2xl font-semibold text-dark">4</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order management placeholder -->
+            <div class="bg-white p-6 rounded-lg shadow mb-6">
+                <h2 class="text-lg font-semibold text-dark mb-4">Order Management</h2>
+                <p class="text-gray-500">Order management coming soon. This section will allow employees to process orders, track referrals, and manage customer interactions.</p>
+            </div>
+
+            <!-- Recent orders -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-dark">Recent Orders</h2>
+                    <a href="#" class="text-sm text-blue-500 hover:text-blue-600">View All</a>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="p-2 rounded-full bg-blue-100 text-blue-500">
+                            <i data-feather="shopping-bag" class="h-5 w-5"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-dark">Order #1234</p>
+                            <p class="text-sm text-gray-500">$145.99 • Referral: Alex Johnson</p>
+                            <p class="text-xs text-gray-400 mt-1">30 minutes ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="p-2 rounded-full bg-blue-100 text-blue-500">
+                            <i data-feather="shopping-bag" class="h-5 w-5"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-dark">Order #1233</p>
+                            <p class="text-sm text-gray-500">$89.50 • Walk-in</p>
+                            <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="p-2 rounded-full bg-blue-100 text-blue-500">
+                            <i data-feather="shopping-bag" class="h-5 w-5"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-dark">Order #1232</p>
+                            <p class="text-sm text-gray-500">$245.00 • Referral: Maria Garcia</p>
+                            <p class="text-xs text-gray-400 mt-1">4 hours ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>

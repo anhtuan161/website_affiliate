@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User roles enum - mapping to your existing roles
+enum Role {
+  ADMIN      // Full system access
+  STAFF      // SME Employee - can create & edit posts
+  MEMBER     // Collaborator - can view posts
+  OWNER      // SME Owner - can manage affiliates
+}
+
+// User model - represents all users in the system
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed with bcrypt
+  name      String?
+  role      Role     @default(MEMBER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  posts     Post[]   @relation("PostAuthor")
+  createdAtPosts Post[] @relation("PostCreatedBy")
+
+  @@map("users")
+}
+
+// Post model - represents content/items that can be managed
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  status      PostStatus @default(DRAFT)
+  authorId    String?  // Optional - can be null for system posts
+  createdById String?  // Who created this post (for audit)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  author      User?    @relation("PostAuthor", fields: [authorId], references: [id])
+  createdBy   User?    @relation("PostCreatedBy", fields: [createdById], references: [id])
+
+  @@map("posts")
+}
+
+// Post status enum
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

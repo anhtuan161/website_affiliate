@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AffiliateFlow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                        dark: '#1F2937',
+                        light: '#F9FAFB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i data-feather="link" class="text-primary h-8 w-8"></i>
+                    <span class="ml-2 text-xl font-bold text-dark">AffiliateFlow</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="register.html" class="px-4 py-2 rounded-md text-sm font-medium text-dark hover:bg-gray-100">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-dark">Sign in to your account</h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Or <a href="register.html" class="font-medium text-primary hover:text-primary-dark">create a new account</a>
+            </p>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <form class="space-y-6" id="loginForm" data-action="login">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700"> Email address </label>
+                        <div class="mt-1">
+                            <input id="email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm form-input" data-slot="email-input">
+                        </div>
+                        <p class="mt-1 text-sm text-red-600 hidden" id="email-error" data-slot="email-error">Please enter a valid email address</p>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700"> Password </label>
+                        <div class="mt-1 relative">
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm form-input" data-slot="password-input">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i data-feather="eye" class="h-5 w-5 text-gray-400 cursor-pointer" id="togglePassword" data-action="toggle-password"></i>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-red-600 hidden" id="password-error" data-slot="password-error">Please enter a valid password</p>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" data-slot="remember-me">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700"> Remember me </label>
+                        </div>
+
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-primary hover:text-primary-dark"> Forgot your password? </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" data-slot="submit-button">
+                            <span data-slot="submit-text">Sign in</span>
+                            <span class="hidden" data-slot="loading-text">Signing in...</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500"> Or continue with </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-3 gap-3">
+                        <div>
+                            <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i data-feather="github" class="h-5 w-5"></i>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i data-feather="twitter" class="h-5 w-5"></i>
+                            </a>
+                        </div>
+
+                        <div>
+                            <a href="#" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i data-feather="facebook" class="h-5 w-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import authManager from '/src/client/auth.js';
+        import { DOMUtils, FormUtils, NotificationUtils } from '/src/client/ui.js';
+        
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Password visibility toggle
+        document.getElementById('togglePassword')?.addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this;
+            if (passwordInput && passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                feather.replace();
+            } else if (passwordInput) {
+                passwordInput.type = 'password';
+                feather.replace();
+            }
+        });
+
+        // Form submission handler
+        document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target as HTMLFormElement;
+            const formData = FormUtils.getFormData(form);
+            
+            // Clear previous errors
+            FormUtils.hideError('email-error');
+            FormUtils.hideError('password-error');
+            
+            // Validate email
+            if (!FormUtils.isValidEmail(formData.email)) {
+                FormUtils.showError('email-error', 'Please enter a valid email address');
+                return;
+            }
+            
+            // Validate password
+            if (!formData.password || formData.password.length < 6) {
+                FormUtils.showError('password-error', 'Password must be at least 6 characters');
+                return;
+            }
+            
+            // Show loading state
+            const submitButton = form.querySelector('[data-slot="submit-button"]') as HTMLButtonElement;
+            const submitText = form.querySelector('[data-slot="submit-text"]') as HTMLElement;
+            const loadingText = form.querySelector('[data-slot="loading-text"]') as HTMLElement;
+            
+            if (submitButton && submitText && loadingText) {
+                submitButton.disabled = true;
+                submitText.classList.add('hidden');
+                loadingText.classList.remove('hidden');
+            }
+            
+            try {
+                // Attempt login
+                const result = await authManager.login({
+                    email: formData.email,
+                    password: formData.password,
+                    rememberMe: formData['remember-me'] === 'on'
+                });
+                
+                if (result.success) {
+                    NotificationUtils.showSuccess('Login successful!');
+                    // Redirect to appropriate dashboard
+                    setTimeout(() => {
+                        window.location.href = authManager.getRedirectUrl();
+                    }, 1000);
+                } else {
+                    NotificationUtils.showError(result.error || 'Login failed');
+                    FormUtils.showError('password-error', result.error || 'Invalid credentials');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                NotificationUtils.showError('An unexpected error occurred');
+            } finally {
+                // Reset loading state
+                if (submitButton && submitText && loadingText) {
+                    submitButton.disabled = false;
+                    submitText.classList.remove('hidden');
+                    loadingText.classList.add('hidden');
+                }
+            }
+        });
+        
+        // Check if user is already logged in
+        const state = authManager.getState();
+        if (state.isAuthenticated && state.user) {
+            // Redirect to appropriate dashboard
+            window.location.href = authManager.getRedirectUrl();
+        }
+    </script>
+</body>
+</html>
